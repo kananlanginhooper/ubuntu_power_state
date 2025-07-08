@@ -101,6 +101,23 @@ function exit_sleep_mode() {
     echo "$LOG_PREFIX System performance settings restored."
 }
 
+function install_dependencies() {
+    echo -e "\n📦 ${GREEN}[PowerMode] Installing required packages...${RESET}"
+    REQUIRED=("cpufrequtils" "pm-utils" "powertop" "hdparm")
+
+    for pkg in "${REQUIRED[@]}"; do
+        if dpkg -s "$pkg" &>/dev/null; then
+            echo -e "   ✅ $pkg already installed"
+        else
+            echo -e "   📥 Installing ${YELLOW}$pkg${RESET}..."
+            apt-get install -y "$pkg"
+        fi
+    done
+
+    echo -e "\n🎉 ${GREEN}All dependencies installed.${RESET}\n"
+}
+
+
 case "$ACTION" in
     sleep)
         enter_sleep_mode
@@ -108,11 +125,13 @@ case "$ACTION" in
     wake|up)
         exit_sleep_mode
         ;;
+    install) install_dependencies ;;
     "")
         check_status
         ;;
     *)
-        echo "Usage: $0 [sleep|wake|up]"
-        ;;
+        echo -e "\n❌ ${RED}Invalid input: '$ACTION'${RESET}"
+        echo -e "Usage: sudo $0 [${CYAN}sleep${RESET}|${CYAN}wake${RESET}|${CYAN}up${RESET}|${CYAN}install${RESET}]\n"
+        exit 1
 esac
 
