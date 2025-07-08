@@ -6,8 +6,30 @@
 
 set -e
 
+
+# Check for sudo/root privileges
+function require_sudo() {
+    if [[ "$EUID" -ne 0 ]]; then
+        echo -e "\n❌ ${RED}This script must be run as root. Please use 'sudo'.${RESET}\n"
+        exit 1
+    fi
+}
+
+
 ACTION="${1,,}"  # Normalize to lowercase
 LOG_PREFIX="[PowerMode]"
+
+
+# ──────────────────────── Colors ─────────────────────────
+GREEN="\e[32m"
+RED="\e[31m"
+YELLOW="\e[33m"
+CYAN="\e[36m"
+RESET="\e[0m"
+
+
+# check that sudo
+require_sudo
 
 
 check_status() {
