@@ -13,6 +13,9 @@ LOG_PREFIX="[PowerMode]"
 check_status() {
     echo -e "\n🔋 ${GREEN}[PowerMode] Current System Power Status${RESET}"
     echo "───────────────────────────────────────────────"
+    echo ""
+    echo "Commands: sleep, up, wake, (blank for status)"
+    echo ""
 
     # CPU Governor
     gov=$(cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor 2>/dev/null || echo "Unknown")
